@@ -4,29 +4,27 @@ import { Image } from "expo-image";
 
 const { width, height } = Dimensions.get("window");
 
-const SplashScreen = () => {
-  const ellipseScale = useRef(new Animated.Value(0.7)).current; // Skala ellipse
-  const backgroundColor = useRef(new Animated.Value(0)).current; // Warna latar belakang
-  const textTranslateY = useRef(new Animated.Value(height * 0.7)).current; // Posisi vertikal teks
-  const textOpacity = useRef(new Animated.Value(0)).current; // Opasitas teks
-  const addScale = useRef(new Animated.Value(0.7)).current; // Skala gambar "add"
-  const addTranslateY = useRef(new Animated.Value(0)).current; // Posisi vertikal gambar "add"
+const SplashScreen = ({ navigation }) => {
+  // Animated values
+  const ellipseScale = useRef(new Animated.Value(0.7)).current;
+  const backgroundColor = useRef(new Animated.Value(0)).current;
+  const textTranslateY = useRef(new Animated.Value(height * 0.7)).current;
+  const textOpacity = useRef(new Animated.Value(0)).current;
+  const addScale = useRef(new Animated.Value(0.7)).current;
+  const addTranslateY = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
-      // Animasi ellipse
       Animated.timing(ellipseScale, {
         toValue: 3,
         duration: 1500,
         useNativeDriver: true,
       }),
-      // Animasi latar belakang
       Animated.timing(backgroundColor, {
         toValue: 1,
         duration: 1500,
         useNativeDriver: false,
       }),
-      // Animasi teks
       Animated.timing(textTranslateY, {
         toValue: height * 0.52,
         duration: 1500,
@@ -37,30 +35,25 @@ const SplashScreen = () => {
         duration: 1500,
         useNativeDriver: true,
       }),
-      // Animasi gambar "add"
       Animated.timing(addScale, {
-        toValue: 0.9, // Membesar sedikit
+        toValue: 0.9,
         duration: 1500,
         useNativeDriver: true,
       }),
       Animated.timing(addTranslateY, {
-        toValue: -height * 0.03, // Naik sedikit
+        toValue: -height * 0.03,
         duration: 1500,
         useNativeDriver: true,
       }),
-    ]).start();
-  }, [
-    ellipseScale,
-    backgroundColor,
-    textTranslateY,
-    textOpacity,
-    addScale,
-    addTranslateY,
-  ]);
+    ]).start(() => {
+      navigation.replace("SiginScreen"); // Ganti layar ke SignIn setelah animasi selesai
+    });
+  }, []);
 
+  // Background color animation interpolation
   const backgroundColorInterpolated = backgroundColor.interpolate({
     inputRange: [0, 1],
-    outputRange: ["#FFFFFF", "#1E3A8A"],
+    outputRange: ["#FFFFFF", "#1E3A8A"], // Warna awal dan akhir
   });
 
   return (
@@ -70,6 +63,7 @@ const SplashScreen = () => {
         { backgroundColor: backgroundColorInterpolated },
       ]}
     >
+      {/* Ellipse animation */}
       <Animated.View
         style={[
           styles.ellipseContainer,
@@ -82,19 +76,23 @@ const SplashScreen = () => {
           source={require("../assets/ellipse-1.png")}
         />
       </Animated.View>
+      
+      {/* Center image animation */}
       <Animated.Image
         style={[
           styles.centerImage,
           {
             transform: [
-              { scale: addScale }, // Animasi membesar gambar "add"
-              { translateY: addTranslateY }, // Animasi naik gambar "add"
+              { scale: addScale },
+              { translateY: addTranslateY },
             ],
           },
         ]}
         contentFit="contain"
         source={require("../assets/add-a-subheading-2-1.png")}
       />
+      
+      {/* Text animation */}
       <Animated.Text
         style={[
           styles.welcomeText,
@@ -109,6 +107,8 @@ const SplashScreen = () => {
     </Animated.View>
   );
 };
+
+export default SplashScreen;
 
 const styles = StyleSheet.create({
   splashScreen: {
@@ -133,20 +133,17 @@ const styles = StyleSheet.create({
   },
   centerImage: {
     position: "absolute",
-    width: "80%", // Ukuran asli gambar "add"
+    width: "80%",
     height: "20%",
     alignSelf: "center",
-    top: height * 0.35, // Pastikan tetap di area layar
+    top: height * 0.35,
   },
   welcomeText: {
     position: "absolute",
     fontSize: width * 0.05,
     fontWeight: "300",
-    fontFamily: "Inter-SemiBold",
     color: "#FFFFFF",
     textAlign: "center",
     alignSelf: "center",
   },
 });
-
-export default SplashScreen;
