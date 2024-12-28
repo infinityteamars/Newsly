@@ -5,6 +5,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
+
 // Import Screen
 import SplashScreen from "./screens/Splashscreen";
 import SiginScreen from "./screens/Siginscreen";
@@ -18,6 +19,7 @@ import SearchScreen from "./screens/Searchscreen";
 import ProfilPage from "./screens/Profilpage";
 import LogOut from "./screens/Logout";
 import SavedScreen from "./screens/Savedscreen";
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -76,6 +78,7 @@ const App = () => {
         <Stack.Screen name="SearchScreen" component={SearchScreen} />
         <Stack.Screen name="BookmarksScreen" component={BookmarksScreen} />
         <Stack.Screen name="LogOut" component={LogOut} />
+        
       </Stack.Navigator>
     </NavigationContainer>
   );
